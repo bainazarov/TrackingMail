@@ -1,0 +1,172 @@
+openapi: 3.0.3
+info:
+  title: Tracking API
+  version: 1.0.0
+servers: 
+  - url: http://localhost:8080/
+paths:
+  /mailings:
+    post:
+      summary: Create a new mailing
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Mailing'
+      responses:
+        '201':
+          description: Mailing created successfully
+        '500':
+          description: Internal server error
+
+  /mailings/{mailingId}/arrival/{postOfficeId}:
+    put:
+      summary: Mark mailing as arrived at a specific post office
+      parameters:
+      - in: path
+        name: mailingId
+        required: true
+        schema:
+          type: integer
+        description: ID of the mailing
+      - in: path
+        name: postOfficeId
+        required: true
+        schema:
+          type: integer
+        description: ID of the post office
+      responses:
+        '200':
+          description: Mailing marked as arrived
+        '404':
+          description: Mailing or post office not found
+        '500':
+          description: Internal server error
+
+  /mailings/{mailingId}/departure/{postOfficeId}:
+    put:
+      summary: Mark mailing as departed from a specific post office
+      parameters:
+      - in: path
+        name: mailingId
+        required: true
+        schema:
+          type: integer
+        description: ID of the mailing
+      - in: path
+        name: postOfficeId
+        required: true
+        schema:
+          type: integer
+        description: ID of the post office
+      responses:
+        '200':
+          description: Mailing marked as departed
+        '404':
+          description: Mailing or post office not found
+        '500':
+          description: Internal server error
+
+  /mailings/{mailingId}/receive:
+    put:
+      summary: Mark mailing as received by the recipient
+      parameters:
+      - in: path
+        name: mailingId
+        required: true
+        schema:
+          type: integer
+        description: ID of the mailing
+      responses:
+        '200':
+          description: Mailing marked as received
+        '404':
+          description: Mailing not found
+        '500':
+          description: Internal server error
+
+  /mailings/{mailingId}/history:
+    get:
+      summary: Get the history of a mailing
+      parameters:
+      - in: path
+        name: mailingId
+        required: true
+        schema:
+          type: integer
+        description: ID of the mailing
+      responses:
+        '200':
+          description: Successful operation
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MailingHistory'
+        '404':
+          description: Mailing not found
+        '500':
+          description: Internal server error
+
+components:
+  schemas:
+    Mailing:
+      type: object
+      properties:
+        id:
+          type: integer
+        type:
+          type: string
+        recipientIndex:
+          type: string
+        recipientAddress:
+          type: string
+        recipientName:
+          type: string
+        status:
+          type: string
+      required:
+      - type
+      - recipientIndex
+      - recipientAddress
+      - recipientName
+      - status
+    
+    MailingHistory:
+      type: object
+      properties:
+        id:
+          type: integer
+        mailing:
+          $ref: '#/components/schemas/Mailing'
+        status:
+          type: string
+        date:
+          type: string
+          format: date-time
+        postOffice:
+          $ref: '#/components/schemas/PostOffice'
+      required:
+
+      - mailing
+      - status
+      - date
+      - postOffice
+
+    PostOffice:
+      type: object
+      properties:
+        id:
+          type: integer
+        index:
+          type: string
+        name:
+          type: string
+        address:
+          type: string
+      required:
+      - index
+      - name
+      - address
