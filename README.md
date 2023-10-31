@@ -24,6 +24,10 @@ Tracking Mail - это сервис для отслеживания почтов
             
 4. После запуска проекта, приложение будет доступно по адресу:http://localhost:8080/mailings
 
+
+![image](https://github.com/bainazarov/TrackingMail/assets/135415309/a27eae15-24e2-4d89-a83d-3578d5f2835c)
+
+
 ## Технологии
 * Java
 * Spring Boot
